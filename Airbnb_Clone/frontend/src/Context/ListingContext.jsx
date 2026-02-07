@@ -46,7 +46,7 @@ function ListingContext({children}) {
             formData.append("description", description)
             formData.append("rent", rent)
             formData.append("city", city)
-            formData.append("landMark", landmark)
+            formData.append("landmark", landmark)
             formData.append("category", category)
         
             let result = await axios.post(`${serverUrl}/api/listing/add`, formData, { withCredentials: true })
@@ -74,6 +74,22 @@ function ListingContext({children}) {
             navigate("/viewcard")
         } catch (error) {
             console.error(error)
+        }
+    }
+
+    // --- NEW DELETE FUNCTION ---
+    const handleDeleteListing = async (id) => {
+        setDeleting(true);
+        try {
+            await axios.delete(`${serverUrl}/api/listing/delete/${id}`, { withCredentials: true });
+            toast.success("Listing Deleted Successfully");
+            setDeleting(false);
+            // Refresh the data immediately
+            getListing(); 
+        } catch (error) {
+            setDeleting(false);
+            console.error(error);
+            toast.error("Failed to delete");
         }
     }
 
@@ -127,7 +143,8 @@ function ListingContext({children}) {
         cardDetails, setCardDetails,
         updating, setUpdating,
         deleting, setDeleting,
-        handleSearch, searchData, setSearchData
+        handleSearch, searchData, setSearchData,
+        handleDeleteListing // <--- Exported here
     }
 
     return (

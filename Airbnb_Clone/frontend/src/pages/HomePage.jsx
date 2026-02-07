@@ -1,32 +1,48 @@
 import React, { useContext } from 'react'
 import Nav from '../Component/Nav'
+import Card from '../Component/Card' 
 import { listingDataContext } from '../Context/ListingContext'
 
 function Home() {
-  // Safe destructuring: we provide an empty object fallback {} 
-  // so it doesn't crash if context is temporarily undefined
   const context = useContext(listingDataContext) || {};
   const { newListData = [] } = context; 
 
   return (
-    <div className='w-full min-h-screen bg-white'>
+    <div className='w-full min-h-screen bg-gray-50'>
       <Nav />
       
-      <div className='w-full flex items-center justify-center gap-[25px] flex-wrap mt-[200px] md:mt-[180px] px-4'>
+      
+<div className='w-full max-w-[1400px] mx-auto flex items-start justify-center gap-6 flex-wrap pt-[230px] md:pt-[200px] px-6 pb-20'>        
         {newListData.length > 0 ? (
           newListData.map((list) => (
-            <div key={list._id} className="p-4 border rounded-lg shadow-sm w-[300px]">
-               <p className="font-bold text-lg">{list.title}</p>
-               <p className="text-gray-500">{list.city}, {list.landMark}</p>
-               <p className="text-red-600 font-semibold">₹{list.rent} / night</p>
-            </div>
+            // Inside your map function in HomePage.jsx
+<Card 
+    key={list._id}
+    id={list._id}
+    title={list.title}
+    city={list.city}
+    landMark={list.landmark} 
+    rent={list.rent}
+    image1={list.image1}
+    image2={list.image2}
+    image3={list.image3}
+    
+    // CHANGE: Pass the real rating. If it doesn't exist, it defaults to 0.
+    ratings={list.averageRating || 0} 
+    
+    isBooked={false} 
+/>
           ))
         ) : (
-          <div className="flex flex-col items-center mt-10">
-            <p className="text-gray-400 text-xl font-medium">No listings available right now.</p>
-            <p className="text-gray-500 text-sm">Try adding one from the "List your home" menu!</p>
+          <div className="flex flex-col items-center justify-center mt-20 text-center space-y-4">
+            <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-3xl">🏠</div>
+            <h2 className="text-2xl font-bold text-gray-700">No Listings Yet</h2>
+            <p className="text-gray-500 max-w-md">
+                It looks like our database is empty. Be the first host to publish a luxury flat!
+            </p>
           </div>
         )}
+
       </div>
     </div> 
   )

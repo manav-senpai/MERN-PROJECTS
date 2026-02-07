@@ -5,12 +5,11 @@ import { listingDataContext } from '../Context/ListingContext';
 
 function ListingPage1() {
     let navigate = useNavigate();
+    
     let {
         title, setTitle,
         description, setDescription,
-        frontEndImage1, setFrontEndImage1, 
-        frontEndImage2, setFrontEndImage2, 
-        frontEndImage3, setFrontEndImage3,
+        setFrontEndImage1, setFrontEndImage2, setFrontEndImage3,
         backEndImage1, setBackEndImage1, 
         backEndImage2, setBackEndImage2, 
         backEndImage3, setBackEndImage3,
@@ -28,20 +27,19 @@ function ListingPage1() {
     };
 
     const removeImage = (e, setBack, setFront) => {
-        e.stopPropagation(); // Prevents triggering the file input click
+        e.stopPropagation();
         setBack(null);
         setFront(null);
     };
 
     const imageSlots = [
-        { id: 1, back: backEndImage1, front: frontEndImage1, setBack: setBackEndImage1, setFront: setFrontEndImage1 },
-        { id: 2, back: backEndImage2, front: frontEndImage2, setBack: setBackEndImage2, setFront: setFrontEndImage2 },
-        { id: 3, back: backEndImage3, front: frontEndImage3, setBack: setBackEndImage3, setFront: setFrontEndImage3 },
+        { id: 1, back: backEndImage1, setBack: setBackEndImage1, setFront: setFrontEndImage1 },
+        { id: 2, back: backEndImage2, setBack: setBackEndImage2, setFront: setFrontEndImage2 },
+        { id: 3, back: backEndImage3, setBack: setBackEndImage3, setFront: setFrontEndImage3 },
     ];
 
     return (
         <div className='w-full min-h-screen bg-white flex flex-col items-center py-10 px-4 relative'>
-            
             <div className="w-full max-w-[900px] flex items-center justify-between mb-8">
                 <div 
                     className='w-12 h-12 bg-red-600 cursor-pointer rounded-full flex items-center justify-center hover:bg-red-700 transition-all shadow-md' 
@@ -86,37 +84,33 @@ function ListingPage1() {
                     ></textarea>
                 </div>
 
-                {/* --- UPDATED IMAGES SECTION --- */}
                 <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                     {imageSlots.map((slot) => (
                         <div key={slot.id} className='flex flex-col gap-2'>
                             <label className='text-sm font-medium text-gray-600'>Image {slot.id}</label>
-                            
-                            <div className={`relative w-full h-14 border-2 border-dashed rounded-xl flex items-center justify-center transition-all cursor-pointer overflow-hidden
-                                ${slot.back ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:bg-gray-50'}`}>
-                                
+                            <div className={`relative w-full h-14 border-2 border-dashed rounded-xl flex items-center justify-center transition-all cursor-pointer
+                                ${slot.back ? 'border-red-500 bg-gray-100 shadow-inner' : 'border-gray-300 hover:bg-gray-50'}`}>
                                 <input 
                                     type="file" 
                                     className='absolute inset-0 opacity-0 cursor-pointer z-10' 
                                     required={slot.id === 1 && !slot.back} 
                                     onChange={(e) => handleImageChange(e, slot.setBack, slot.setFront)}
                                 />
-
                                 {slot.back ? (
                                     <div className='flex items-center justify-between w-full px-3 z-20'>
-                                        <span className='text-xs text-red-700 truncate font-medium w-[80%]'>
+                                        <span className='text-[10px] text-red-600 truncate font-bold w-[80%]'>
                                             {slot.back.name}
                                         </span>
                                         <button 
                                             type="button"
                                             onClick={(e) => removeImage(e, slot.setBack, slot.setFront)}
-                                            className='text-red-600 hover:text-red-800 p-1'
+                                            className='bg-red-600 text-white rounded-full p-1 hover:bg-red-800 transition-colors'
                                         >
-                                            <FaTimes />
+                                            <FaTimes size={10}/>
                                         </button>
                                     </div>
                                 ) : (
-                                    <span className='text-xs text-gray-400 pointer-events-none'>Upload Photo</span>
+                                    <span className='text-xs text-gray-400 pointer-events-none font-medium'>Upload Photo</span>
                                 )}
                             </div>
                         </div>

@@ -1,23 +1,29 @@
+import pkg from 'jsonwebtoken';
+const { verify } = pkg; // We extract 'verify' here
 
-
-import jwt, { verify } from "jsonwebtoken"
-const isAuth = async (req , res, next) =>{
-
-    try{
-        let {token} = req.cookies
-        if(!token){
-            res.status(400).json({message:"user doesn't have a token"})
+const isAuth = async (req, res, next) => {
+    try {
+        let { token } = req.cookies;
+        
+        if (!token) {
+            return res.status(401).json({ message: "User doesn't have a token" });
         }
-        let verifyToken = jwt.verify(token, process.env.JWT_SECRET)
-        if(!token){
-            res.status(400).json({message:"user doesn't have a valid token"})
-        }
-        req.userId = verifyToken.userId
-        next()
 
+        // FIX: Removed 'jwt.' prefix. Just use 'verify'
+        let verifyToken = verify(token, process.env.JWT_SECRET);
+        
+        if (!verifyToken) {
+            return res.status(401).json({ message: "User doesn't have a valid token" });
+        }
+
+        // Safety check for ID
+        req.userId = verifyToken.id || verifyToken.userId || verifyToken._id;
+        next();
 
     } catch (error) {
-        res.status(500).json({message:`isAuth error ${error}`})
+        console.error("isAuth Error:", error);
+        res.status(500).json({ message: `isAuth error ${error.message}` });
     }
-
 }
+
+export default isAuth;
